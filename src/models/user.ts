@@ -1,7 +1,6 @@
 // @ts-ignore
 import client from '../database';
 import bcrypt from 'bcrypt';
-import { escapeLeadingUnderscores } from 'typescript';
 
 export interface BaseUser {
     firstName: string;

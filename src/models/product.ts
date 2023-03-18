@@ -1,15 +1,18 @@
 // @ts-ignore
 import client from "../database";
 
-export interface Product {
-    id: number;
+export interface BaseProduct {
     name: string;
     price: number;
 }
 
+export interface Product extends BaseProduct {
+    id: number;
+}
+
 export class ProductStore {
 
-    async create(product: Product): Promise<Product> {
+    async create(product: BaseProduct): Promise<Product> {
         try {
           const sql = 'INSERT INTO products (name, price) VALUES($1, $2) RETURNING *'
           // @ts-ignore
@@ -48,7 +51,7 @@ export class ProductStore {
         }
     }
 
-    async update(id: number, newProductData: Product): Promise<Product> {
+    async update(id: number, newProductData: BaseProduct): Promise<Product> {
         try {
             const sql =
                 'UPDATE products SET name=($1), price=($2) WHERE id=($3) RETURNING *';
