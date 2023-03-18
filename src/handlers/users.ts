@@ -79,8 +79,8 @@ const destroy = async (req: Request, res: Response) => {
         res.send("Required user id is missing!");
         return;
     }
-    const users = await store.delete(req.params.id as unknown as number);
-    res.json(users);
+    const user = await store.delete(req.params.id as unknown as number);
+    res.json(user);
   } catch (err) {
     res.status(400).json(err);
   }
