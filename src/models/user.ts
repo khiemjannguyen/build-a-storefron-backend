@@ -9,8 +9,6 @@ export interface BaseUser {
 }
 
 export interface AuthUser extends BaseUser {
-  firstName: string;
-  lastName: string;
   password: string;
 }
 export interface User extends AuthUser {

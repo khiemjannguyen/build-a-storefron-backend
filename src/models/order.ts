@@ -1,3 +1,5 @@
+
+// @ts-ignore
 import client from "../database";
 
 export interface OrderProducts {
@@ -35,7 +37,7 @@ export class OrderStore {
         }
       }
     
-      async show(id: string): Promise<Order> {
+      async show(id: number): Promise<Order> {
         try {
             const orderSql = 'SELECT * FROM orders WHERE id={$1}'
             const orderProductsSql = 'SELECT product_id, quantity FROM order_products WHERE order_id={$1}'
@@ -98,6 +100,7 @@ export class OrderStore {
         try {
           const orderSql = 'UPDATE orders SET status=($1) WHERE id=($2) RETURNING *'
           const orderProductsSql = 'UPDATE orders_products SET product_id=($1), quantity=($2) WHERE order_id=($3) RETURNING product_id, quantity'
+          // @ts-ignore
           const conn = await client.connect()
           const orderResult = await conn.query(orderSql, [newOrderData.status, id])
           const order = orderResult.rows[0]

@@ -1,4 +1,4 @@
-import { User, UserStore } from "../user";
+import { AuthUser, User, UserStore } from "../user";
 
 const store = new UserStore()
 
@@ -32,60 +32,64 @@ describe("User Model", () => {
         lastName: lastName,
         password: password,
     }
-    const testUser = {
+    const testUser: User = {
         id: 1,
         firstName: firstName,
         lastName: lastName,
         password: password,
     }
-    const updatedUser = {
+    const updatedUser: AuthUser = {
         firstName: 'Mara',
         lastName: 'Musterfrau',
         password: '1234',
     }
-    const testUpdatedUser = {
+    const testUpdatedUser: User = {
         id: 1,
         firstName: firstName,
         lastName: lastName,
         password: password,
     }
-    
+
+    it('should create a new user', async () => {
+        const user = await store.create(newUser);
+        expect(user).toEqual(testUser);
+        await store.delete(1)
+    });
 
     describe("Tests methods", () => {
-        it('should create a new user', async () => {
-            const user = await store.create(newUser);
-            expect(user).toEqual(testUser);
-        });
         
-          it('should return a list of users', async () => {
+        beforeAll(async () => {
             await store.create(newUser);
+        })
+
+        afterAll(async () => {
+            await store.delete(1);
+        })
+        
+        it('should return a list of users', async () => {
             const result = await store.index();
             expect(result).toEqual([testUser]);
-          });
-        
-          it('should return the correct user', async () => {
-            await store.create(newUser);
+        });
+    
+        it('should return the correct user', async () => {
             const result = await store.show(1);
             expect(result).toEqual(testUser);
-          });
+        });
 
-          it('should update the user', async () => {
-            await store.create(newUser);
+        it('authenticate the user', async () => {
+            const result = await store.authenticate(firstName, lastName, password)
+            expect(result).toEqual(testUser);
+        });
+
+        it('should update the user', async () => {
             const result = await store.update(1, updatedUser);
             expect(result).toEqual(testUpdatedUser);
-          });
-        
-          it('should remove the user', async () => {
-            await store.create(newUser);
+        });
+    
+        it('should remove the user', async () => {
             store.delete(1);
             const result = await store.index()
             expect(result).toEqual([]);
-          });
-
-          it('authenticate the user', async () => {
-            await store.create(newUser);
-            const result = await store.authenticate(firstName, lastName, password)
-            expect(result).toEqual(testUser);
-          });
+        });
     });
 }); 
